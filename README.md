@@ -16,21 +16,18 @@ NoteKeeper is a simple full-stack note-taking app built using **Node.js** and **
 - ✅ Backend built with pure Node.js using core modules like `http`, `fs`, `url`, and `path`
 
 ---
+## 📂 Directory Structure
 
-## 📂 Folder Structure
-NoteKeeper/
+```bash
+Notekeeper/
 ├── app.js # Main backend server
 ├── notes.json # Local JSON file to store notes
 ├── README.md # Project documentation
 ├── public/
-│ └── index.html # Frontend UI
+│ └── index.html # Frontend UI 
 └── utils/
 └── notes.js # Note handling logic (add/view/delete)
-
-yaml
-Copy
-Edit
-
+```
 ---
 
 ## ⚙️ How to Run Locally
@@ -64,7 +61,7 @@ Feel free to reach out:
 
 📧 Email: hajisaad029@gmail.com
 
-💼 LinkedIn: saadhaji2007
+💼 LinkedIn: https://www.linkedin.com/in/saadhaji2007/
 
 ---
 ## 📃 License
