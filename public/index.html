@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NoteKeeper App</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color: #222;
+      margin-bottom: 20px;
+    }
+
+    .note-form {
+      background: #fff;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #notes {
+      width: 90%;
+      max-width: 600px;
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .note-card {
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    .note-card h3 {
+      margin: 0 0 5px;
+      font-size: 1.2em;
+      color: #333;
+    }
+
+    .note-card p {
+      font-size: 0.95em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>NoteKeeper</h1>
+
+  <div class="note-form">
+    <label for="title">Title:</label>
+    <input type="text" id="title" placeholder="Enter note title">
+
+    <label for="content">Content:</label>
+    <textarea id="content" rows="4" placeholder="Enter note content"></textarea>
+
+    <button onclick="addNote()">Add Note</button>
+    <button onclick="viewNotes()">View Notes</button>
+    <button onclick="deleteNote()">Delete Note</button>
+  </div>
+
+  <div id="notes"></div>
+
+  <script>
+    function addNote() {
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      if (!title || !content) {
+        alert('Please enter both title and content.');
+        return;
+      }
+      fetch(`/add?title=${encodeURIComponent(title)}&content=${encodeURIComponent(content)}`)
+        .then(res => res.text())
+        .then(msg => {
+          alert(msg);
+          document.getElementById('title').value = '';
+          document.getElementById('content').value = '';
+          viewNotes();
+        });
+    }
+
+    function viewNotes() {
+      fetch('/view')
+        .then(res => res.json())
+        .then(data => {
+          const notesDiv = document.getElementById('notes');
+          notesDiv.innerHTML = data.length ? data.map(note =>
+            `<div class="note-card">
+              <h3>${note.title}</h3>
+              <p>${note.content}</p>
+            </div>`
+          ).join('') : '<p>No notes found.</p>';
+        });
+    }
+
+    function deleteNote() {
+      const title = document.getElementById('title').value;
+      if (!title) {
+        alert('Please enter the title of the note to delete.');
+        return;
+      }
+      fetch(`/delete?title=${encodeURIComponent(title)}`)
+        .then(res => res.text())
+        .then(msg => {
+          alert(msg);
+          document.getElementById('title').value = '';
+          viewNotes();
+        });
+    }
+
+    // Load notes on page load
+    window.onload = viewNotes;
+  </script>
+
+</body>
+</html>
